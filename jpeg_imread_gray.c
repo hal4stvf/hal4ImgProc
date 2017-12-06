@@ -1,6 +1,4 @@
-/*
- * example.c angepasst von der ljpeg 
- *
+/* example.c angepasst von der ljpeg 
  */
 
 #include <stdio.h>
@@ -9,74 +7,63 @@
 
 #include "jpeglib.h"
 
+#include <setjmp.h> // nicht nötig, oder?
 
-#include <setjmp.h>
+/******************************************************************************
+*******************************************************************************
+******************************************************************************/
+
+int img_height = 600;
+int img_width = 600; 
+
+GLOBAL(int)
+imread_gray(char * filename, unsigned char ***img_Matrix);
+
+GLOBAL(void)
+write_JPEG_file (char * filename, int quality, unsigned char *** img_ptr);
 
 
-/*
- * gray imread 
- */
-
-static int img_height = 600;
-static int img_width = 600; 
-//static int img_height;
-//static int img_width; 
-
-
-
-GLOBAL(unsigned int )
-imread_gray(char * filename, unsigned int ***img_Matrix);
-
-void image_allocate(unsigned int ***img){
-	*img = (unsigned int**) malloc (sizeof(unsigned int*)*img_height);				
+void image_allocate(unsigned char ***img){
+	*img = (unsigned char**) malloc (sizeof(unsigned char*)*img_height);				
 	for (int i = 0; i < img_width; i++) 	
-		(*img)[i] = (unsigned int *) malloc (sizeof(unsigned int)*img_width);	
-//	for (int i = 0; i < img_height; i++) 	
-//	{	for (int j = 0; j < img_width; j++) 	
-//			(*img)[i][j] = i;
-//	}
-	
+		(*img)[i] = (unsigned char *) malloc (sizeof(unsigned char)*img_width);	
 }
 
-int print_Matrix(unsigned int  ** img);
+void free_img(unsigned char *** img);
+void free_img(unsigned char *** img)
+{
+	for(int i = 0; i < img_width; i++)
+		free((*img)[i]);
+
+	free(*img);
+}
+
+int print_Matrix(unsigned char  ** img);
+
+/******************************************************************************
+******************************************************************************/
 
 int main(int argc, char* argv[]){
-//	unsigned int** a;
 
-	
-	/**************************************************************************/
-	// DeleteAfterUse
-//	unsigned int img[img_height][img_width];
-//	unsigned int **img_Matrix = (unsigned int **)img;
-//
-//	for (int i = 0; i < img_height; i++)
-//	{
-//		for (int j = 0; j < img_width; j++)
-//		{
-//			printf(" %3u ",img[0][0] = i+j);
-//		} 
-//			printf("\n");
-//	}
-	/**************************************************************************/
-//	a = imread_gray(argv[1]);
-
-	unsigned int **img_Matrix; 
-	unsigned int **img;
+	unsigned char **img_Matrix; 
 
 	image_allocate(&img_Matrix);
 	imread_gray(argv[1],&img_Matrix);
-//	printf(" %3u ",*(*(img_Matrix)));
 
-	free(img_Matrix);
-//	image_allocate(&img);
-	print_Matrix(img_Matrix);
+	write_JPEG_file("test_jpeg_grayscale.jpg",50,&img_Matrix);
+
+	free_img(&img_Matrix);
 	return 0;
 }
+/******************************************************************************/
 
-//GLOBAL(unsigned int ** )
-//imread_gray(char * filename) 
-GLOBAL(unsigned int )
-imread_gray(char * filename, unsigned int ***img_Matrix)
+/* [Purpose] imread_gray Function. 
+*	it takes in a Filename and Pointer to a Pointer of Pointer of unsigned char**
+*	It decompresses the jpeg associated with the filename and puts it in grayscale
+*/
+
+GLOBAL(int) // Wofür das GLOBAL?
+imread_gray(char * filename, unsigned char ***img_Matrix)
 {
   struct jpeg_decompress_struct cinfo;
 	struct jpeg_error_mgr err;
@@ -84,7 +71,6 @@ imread_gray(char * filename, unsigned int ***img_Matrix)
 	cinfo.err = jpeg_std_error( &err );
   /* More stuff */
   FILE * infile;		/* source file */
-//  JSAMPARRAY buffer;		/* Output row buffer */
   int row_stride;		/* physical row width in output buffer */
 
   if ((infile = fopen(filename, "rb")) == NULL) {
@@ -123,27 +109,6 @@ imread_gray(char * filename, unsigned int ***img_Matrix)
 	unsigned char* data = (unsigned char*) malloc(dataSize);
 	unsigned char* rowptr;
 	
-
-	/**************************************************************************/
-//	// DeleteAfterUse
-//		/*
-//		 * Holt Speicher für das Bild
-//		 */
-//	
-//		//unsigned int** img_Matrix;
-//	  if ((img_Matrix) == NULL) {
-//	    fprintf(stderr, " not alloc: img_Matrix");
-//	    return 0;
-//	  }
-//	
-//		*img_Matrix = (unsigned int**)malloc(sizeof(unsigned int*)*img_height ); 
-//	
-//	  if ((*img_Matrix) == NULL) {
-//	    fprintf(stderr, " not alloc: img_Matrix_ptr");
-//	    return 0;
-//	  }
-	/**************************************************************************/
-//image_allocate(img_Matrix);	
 	while (cinfo.output_scanline < img_height)
 	{
 		rowptr = data + cinfo.output_scanline*img_width*numChannels;		
@@ -152,11 +117,6 @@ imread_gray(char * filename, unsigned int ***img_Matrix)
 	/* 
 	 * Initializiert das Bild
 	 */ 
-
-		/**************************************************************************/
-		// DeleteAfterUse
-//		(*img_Matrix)[cinfo.output_scanline] = (unsigned int*) malloc(sizeof(unsigned int)*img_width+200); 
-		/**************************************************************************/
 
 		double helpvar = 0;
 		for (int j = 0; j < img_width*numChannels; j++)
@@ -184,19 +144,27 @@ imread_gray(char * filename, unsigned int ***img_Matrix)
   fclose(infile);
 
   /* And we're done! */
-
-//		return img_Matrix;
-//	printf(" %3u ",*(*(*(img_Matrix))));
-	(*img_Matrix)[8][9] = 1;
-		return 1;
+	return 1;
 }
 
-int print_Matrix(unsigned int **img){
-//  if (img == NULL) {
-//    fprintf(stderr, " not alloc: img_Matrix to print \n");
-//    return 0;
-//  }
-	
+/******************************************************************************/
+
+/* [Purpose] of print Matrix
+ * Funktion um die Matrix auf die Konsole ausgibt
+ */
+
+int print_Matrix(unsigned char **img){
+
+	/* Is there something to print? */
+
+  if (img == NULL) {
+    fprintf(stderr, " not alloc: img_Matrix to print \n");
+    return 0;
+  }
+	//////////////////////////////////////////////////////////////////////////////
+
+	/* Prints the Matrix to the display */	
+
 	for (int i = 0; i < img_height; i++)
 	{
 		for (int j = 0; j < img_width; j++)
@@ -205,5 +173,96 @@ int print_Matrix(unsigned int **img){
 		} 
 			printf("\n");
 	}
+	//////////////////////////////////////////////////////////////////////////////
 	return 1;
+}
+/******************************************************************************/
+
+/* [Purpose] Will compress a processed image to jpeg.
+*/
+
+GLOBAL(void)
+write_JPEG_file (char * filename, int quality, unsigned char *** img_ptr)
+{
+  /* This struct contains the JPEG compression parameters and pointers to
+   */
+
+  struct jpeg_compress_struct cinfo;
+
+  /* This struct represents a JPEG error handler.
+   */
+
+  struct jpeg_error_mgr jerr;
+
+  /* More stuff */
+
+  FILE * outfile;		/* target file */
+  JSAMPROW row_pointer[1];	/* pointer to JSAMPLE row[s] */
+  int row_stride;		/* physical row width in image buffer */
+
+  /* Step 1: allocate and initialize JPEG compression object */
+
+  cinfo.err = jpeg_std_error(&jerr);
+
+  /* Now we can initialize the JPEG compression object. */
+
+  jpeg_create_compress(&cinfo);
+
+  /* Step 2: specify data destination (eg, a file) */
+
+  if ((outfile = fopen(filename, "wb")) == NULL) {
+    fprintf(stderr, "can't open %s\n", filename);
+    exit(1);
+  }
+
+  jpeg_stdio_dest(&cinfo, outfile);
+
+  /* Step 3: set parameters for compression */
+
+  /* First we supply a description of the input image.
+   * Four fields of the cinfo struct must be filled in:
+   */
+
+  cinfo.image_width = img_width; 	/* image width and height, in pixels */
+  cinfo.image_height = img_height;
+  cinfo.input_components = 1;		/* # of color components per pixel */
+  cinfo.in_color_space = JCS_GRAYSCALE; 	/* colorspace of input image */
+  /* Now use the library's routine to set default compression parameters.
+   */
+  jpeg_set_defaults(&cinfo);
+  /* Now you can set any non-default parameters you wish to.
+   * Here we just illustrate the use of quality (quantization table) scaling:
+   */
+  jpeg_set_quality(&cinfo, quality, TRUE /* limit to baseline-JPEG values */);
+
+  /* Step 4: Start compressor */
+
+  jpeg_start_compress(&cinfo, TRUE);
+
+  /* Step 5: while (scan lines remain to be written) */
+  /*           jpeg_write_scanlines(...); */
+
+  row_stride = img_width;	/* JSAMPLEs per row in image_buffer */
+
+  while (cinfo.next_scanline < cinfo.image_height) {
+    /* jpeg_write_scanlines expects an array of pointers to scanlines.
+     * Here the array is only one element long, but you could pass
+     * more than one scanline at a time if that's more convenient.
+     */
+    row_pointer[0] = (*img_ptr)[cinfo.next_scanline];
+    (void) jpeg_write_scanlines(&cinfo, row_pointer, 1);
+  }
+
+  /* Step 6: Finish compression */
+
+  jpeg_finish_compress(&cinfo);
+  /* After finish_compress, we can close the output file. */
+  fclose(outfile);
+
+  /* Step 7: release JPEG compression object */
+
+  /* This is an important step since it will release a good deal of memory. */
+  jpeg_destroy_compress(&cinfo);
+
+  /* And we're done! */
 }
