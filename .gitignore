@@ -1,1 +1,23 @@
-*.o*.o*.o*.o*.o*.o*.o*.o
+# Random stuff
+
+# Latex Files
+*.out
+*/*.out
+*.o
+
+# vim, texpad  Files#
+*.swp
+**/*.swp	
+**/*.texp*
+
+# OS gernerated Files #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehtumbs.db
+Thumbs.db
+
+#gitignore itself
+#.gitignore
