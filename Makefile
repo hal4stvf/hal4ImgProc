@@ -14,7 +14,7 @@ clean:
 
 cleana: 
 	rm -rf *.{o,hi} 
-	rm A_jpgin jpgout
+	rm -rf A_jpgin A_jpgout
 
 run:
 	make jpgin

@@ -15,16 +15,16 @@
 int main(int argc, char* argv[]){
 
 	unsigned char **img_Matrix; 
-	FILE *pOut = fopen("rmnow.pgm","a");
+	//FILE *pOut = fopen("rmnow.pgm","a");
 
-	image_allocate(&img_Matrix);
+//	image_allocate(&img_Matrix);
 	imread_gray(argv[1],&img_Matrix);
 
-	write_PGM_file(img_Matrix,pOut);
+//	write_PGM_file(img_Matrix,pOut);
 	write_JPEG_file("test_jpeg_grayscale.jpg",50,&img_Matrix);
 
 	free_img(&img_Matrix);
-	fclose(pOut);
+	//fclose(pOut);
 	return 0;
 }
 /******************************************************************************/
