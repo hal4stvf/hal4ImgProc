@@ -23,13 +23,15 @@ imread_gray(char * filename, unsigned char ***img_Matrix);
 GLOBAL(void)
 write_JPEG_file (char * filename, int quality, unsigned char *** img_ptr);
 
-void image_allocate(unsigned char ***img);
+int image_allocate(int w, int h, unsigned char ***img);
 
 void free_img(unsigned char *** img);
 
 int print_Matrix(unsigned char  ** img);
 
 int write_PGM_file (unsigned char ** img, FILE *pOutputfile);
+
+int write_Haskell_file (unsigned char ** img, FILE *pOutputfile);
 
 /******************************************************************************
 ******************************************************************************/
@@ -272,13 +274,50 @@ int write_PGM_file(unsigned char **img, FILE *pOutputfile){
 	return 0;
 }
 /******************************************************************************/
+/* [Purpose] of write Haskell Matrix
+ * Funktion um die Matrix in eine Haskell Datei zu schreiben
+ */
 
+int write_Haskell_file(unsigned char **img, FILE *pOutputfile){
+
+	/* Is there something to print? */
+
+  if (img == NULL) {
+    fprintf(stderr, " not alloc: img_Matrix to print \n");
+    return 0;
+  }
+	//////////////////////////////////////////////////////////////////////////////
+
+	/* Prints the Matrix to a Haskell file*/	
+
+	fprintf(pOutputfile,"image = [");
+	for (int i = 0; i < img_height; i++)
+	{
+		fprintf(pOutputfile,"[");
+		for (int j = 0; j < img_width; j++)
+		{
+			if (j != img_width-1)
+			fprintf(pOutputfile,"%3u,",img[i][j]);
+			else 
+			fprintf(pOutputfile,"%3u",img[i][j]);
+		} 
+			fprintf(pOutputfile,"]");
+			
+	}
+	fprintf(pOutputfile,"]");
+	//////////////////////////////////////////////////////////////////////////////
+	return 0;
+}
+/******************************************************************************/
 /* [Purpose] 
 */
-void image_allocate(unsigned char ***img){
-	*img = (unsigned char**) malloc (sizeof(unsigned char*)*img_height);				
-	for (int i = 0; i < img_width; i++) 	
-		(*img)[i] = (unsigned char *) malloc (sizeof(unsigned char)*img_width);	
+int image_allocate(int w, int h,unsigned char ***img){
+	w = img_width;
+	h = img_height;
+	*img = (unsigned char**) malloc (sizeof(unsigned char*)*h);				
+	for (int i = 0; i < h; i++) 	
+		(*img)[i] = (unsigned char *) malloc (sizeof(unsigned char)*w);	
+	return 0;
 }
 /******************************************************************************/
 
