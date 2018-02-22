@@ -262,7 +262,7 @@ int write_PGM_file(unsigned char **img, FILE *pOutputfile){
   }
 	//////////////////////////////////////////////////////////////////////////////
 
-	/* Prints the Matrix to the display */	
+	/* Prints the Matrix to the file*/	
 
 	for (int i = 0; i < img_height; i++)
 	{

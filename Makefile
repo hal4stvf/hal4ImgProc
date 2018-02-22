@@ -9,6 +9,7 @@ hs:
 
 clean: 
 	rm -rf *.{o,hi} 
+	rm -f rmThisBuffer
 	rm -f rmNow
 	rm -f A_ImageProcess
 

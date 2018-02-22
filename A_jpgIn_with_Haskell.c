@@ -15,13 +15,21 @@
 int main(int argc, char* argv[]){
 
 	unsigned char **img_Matrix; 
-
-	/* Convertiert die Datei in Graustufen. */
+	FILE *pOut;
+//	if (argc < 3){
+		pOut = fopen("rmThisBuffer","w");
+//	}
+//	else {
+//	 pOut = fopen(argv[2],"w");
+//	}
 	imread_gray(argv[1],&img_Matrix);
-	/* Druckt die Matrix auf den Bildschirm. Kann dann "gepipt" werden.*/
-	print_Matrix(img_Matrix);
+
+//	write_Haskell_file(img_Matrix,pOut);
+//	print_Matrix(img_Matrix);
+		write_PGM_file(img_Matrix, pOut);
 
 	free_img(&img_Matrix);
+	fclose(pOut);
 	return 0;
 }
 /******************************************************************************/
