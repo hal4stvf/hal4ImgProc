@@ -29,6 +29,8 @@ void free_img(unsigned char *** img);
 
 int print_Matrix(unsigned char  ** img);
 
+int write_PGM_file (unsigned char ** img, FILE *pOutputfile);
+
 /******************************************************************************
 ******************************************************************************/
 
@@ -240,6 +242,34 @@ int print_Matrix(unsigned char **img){
 	}
 	//////////////////////////////////////////////////////////////////////////////
 	return 1;
+}
+/******************************************************************************/
+/* [Purpose] of write PGM Matrix
+ * Funktion um die Matrix in ein textDatei zu schreiben
+ */
+
+int write_PGM_file(unsigned char **img, FILE *pOutputfile){
+
+	/* Is there something to print? */
+
+  if (img == NULL) {
+    fprintf(stderr, " not alloc: img_Matrix to print \n");
+    return 0;
+  }
+	//////////////////////////////////////////////////////////////////////////////
+
+	/* Prints the Matrix to the display */	
+
+	for (int i = 0; i < img_height; i++)
+	{
+		for (int j = 0; j < img_width; j++)
+		{
+			fprintf(pOutputfile,"%3u ",img[i][j]);
+		} 
+			fprintf(pOutputfile,"\n");
+	}
+	//////////////////////////////////////////////////////////////////////////////
+	return 0;
 }
 /******************************************************************************/
 
