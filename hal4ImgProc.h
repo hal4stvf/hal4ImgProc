@@ -33,6 +33,8 @@ int write_PGM_file (unsigned char ** img, FILE *pOutputfile);
 
 int write_Haskell_file (unsigned char ** img, FILE *pOutputfile);
 
+int read_to_img(int width, int height, unsigned char *** img, FILE *pInput);
+
 /******************************************************************************
 ******************************************************************************/
 
@@ -87,7 +89,7 @@ imread_gray(char * filename, unsigned char ***img_Matrix)
 	
 	unsigned char* data = (unsigned char*) malloc(dataSize);
 	unsigned char* rowptr;
-	
+	image_allocate(img_width,img_height,img_Matrix);	
 	while (cinfo.output_scanline < img_height)
 	{
 		rowptr = data + cinfo.output_scanline*img_width*numChannels;		
@@ -290,7 +292,9 @@ int write_Haskell_file(unsigned char **img, FILE *pOutputfile){
 
 	/* Prints the Matrix to a Haskell file*/	
 
-	fprintf(pOutputfile,"image = [");
+	fprintf(pOutputfile,"module BBRM where \n");
+	fprintf(pOutputfile,"processImage :: [[Int]]\n");
+	fprintf(pOutputfile,"processImage = [");
 	for (int i = 0; i < img_height; i++)
 	{
 		fprintf(pOutputfile,"[");
@@ -301,6 +305,9 @@ int write_Haskell_file(unsigned char **img, FILE *pOutputfile){
 			else 
 			fprintf(pOutputfile,"%3u",img[i][j]);
 		} 
+			if (i != img_height -1)
+			fprintf(pOutputfile,"],");
+			else
 			fprintf(pOutputfile,"]");
 			
 	}
@@ -312,11 +319,15 @@ int write_Haskell_file(unsigned char **img, FILE *pOutputfile){
 /* [Purpose] 
 */
 int image_allocate(int w, int h,unsigned char ***img){
+	/* Erstmal, weil jpgin noch nicht dynamisch denkt.*/
+	if (w == 0){
 	w = img_width;
 	h = img_height;
+		}
 	*img = (unsigned char**) malloc (sizeof(unsigned char*)*h);				
-	for (int i = 0; i < h; i++) 	
+	for (int i = 0; i < h; i++){ 	
 		(*img)[i] = (unsigned char *) malloc (sizeof(unsigned char)*w);	
+	}
 	return 0;
 }
 /******************************************************************************/
@@ -329,4 +340,20 @@ void free_img(unsigned char *** img)
 		free((*img)[i]);
 
 	free(*img);
+}
+/******************************************************************************/
+/* [Purpose] 
+* liest haskell Dateiausgabe in ein Bild ein.
+*/
+int read_to_img(int width, int height, unsigned char *** img, FILE *pInput){
+	int c;
+
+ /* Initializiere das Bild */	
+ for (int i = 0; i < height; i++){
+	for (int j = 0; j < width; j++){
+			fscanf(pInput, "%d", &c);
+			(*img)[i][j] = c;
+		} 
+	 }
+return 0;		
 }
