@@ -15,13 +15,13 @@
 int main(int argc, char* argv[]){
 
 	unsigned char **img_Matrix; 
-	FILE *pOut;
-	if (argc < 3){
-		pOut = fopen("BBRM.hs","w");
-	}
-	else {
-	 pOut = fopen(argv[2],"w");
-	}
+//	FILE *pOut;
+//	if (argc < 3){
+//		pOut = fopen("BBRM.hs","w");
+//	}
+//	else {
+//	 pOut = fopen(argv[2],"w");
+//	}
 	/* hier muss in einem shell Skript als argv noch mithilfe von
 	 * convert die Größe des Bildes übergeben werden.
 	 * Funktioniert zur Zeit auch so, solange das Bilder kleiner
@@ -32,7 +32,8 @@ int main(int argc, char* argv[]){
 	//image_allocate(w,h,&img_Matrix);
 	imread_gray(argv[1],&img_Matrix);
 
-	write_Haskell_file(img_Matrix,pOut);
+//	write_Haskell_file(img_Matrix,pOut);
+	print_Matrix(img_Matrix);
 	//write_JPEG_file("test_jpeg_grayscale.jpg",50,&img_Matrix);
 
 	free_img(&img_Matrix);

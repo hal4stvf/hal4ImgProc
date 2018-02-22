@@ -27,7 +27,7 @@ int image_allocate(int w, int h, unsigned char ***img);
 
 void free_img(unsigned char *** img);
 
-int print_Matrix(unsigned char  ** img);
+int print_Matrix(unsigned char ** img);
 
 int write_PGM_file (unsigned char ** img, FILE *pOutputfile);
 
@@ -245,7 +245,7 @@ int print_Matrix(unsigned char **img){
 			printf("\n");
 	}
 	//////////////////////////////////////////////////////////////////////////////
-	return 1;
+	return 0;
 }
 /******************************************************************************/
 /* [Purpose] of write PGM Matrix

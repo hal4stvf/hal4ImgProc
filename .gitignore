@@ -22,4 +22,9 @@ Thumbs.db
 #gitignore itself
 #.gitignore
 A_main
-A_ImageProcess A_jpgin A_jpgout BBRM.hs
+A_ImageProcess 
+A_jpgin 
+A_jpgin
+A_jpgout
+BBRM.hs
+rm*
