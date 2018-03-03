@@ -4,8 +4,9 @@ jpgin:
 jpgout: 
 	ghc --make -no-hs-main -optc-O A_jpgOut_with_Haskell.c -ljpeg -o A_jpgout
 
-hs:
+hs: *.hs
 	ghc A_ImageProcess.hs
+	rm -f *.{o,hi}
 
 clean: 
 	rm -rf *.{o,hi} 
@@ -18,6 +19,6 @@ cleana:
 	rm -rf A_jpgin A_jpgout
 
 run:
-	make jpgin
-	make jpgout
-	make clean
+	./0run.sh lena_testbild.jpg RmWorkedOnwithHaskell.jpg 
+	open RmWorkedOnwithHaskell.jpg
+	$(open -a /Applications/Google Chrome.app/ RmWorkedOnwithHaskell.jpg)

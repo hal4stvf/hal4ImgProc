@@ -2,6 +2,8 @@ import System.IO
 import System.Environment
 import Data.List
 
+import Hal4BiVa
+
 -- Hier wird das Bild in ein Textdatei kopiert 
 arrayPrinter = foldr (++) "" . map (\ s -> s ++ "\n") . map (intercalate " " . map show)
 
@@ -37,6 +39,3 @@ imgProccessing = id
 -- args <- getArgs
 -- writeFile (args !! 0) . arrayPrinter $ processImage 
 --------------------------------------------------
-
-
-
