@@ -1,19 +1,31 @@
 module StvfC where
 
-import Foreign
-import Foreign.C.Types
--- 
--- fibonacci :: Int -> Int
--- fibonacci n = fibs !! n
---   where fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
--- 
--- fibonacci_hs :: CInt -> CInt
--- fibonacci_hs = fromIntegral . fibonacci . fromIntegral 
--- 
--- foreign export ccall fibonacci_hs :: CInt -> CInt
+{-
+ - This should be a function
+ - that I can call in C 
+ - which than will do my ImageProcessing.
+ - VERY BAD VERSION!!! UNSAFE
+ -}
 
-  zeros :: [[Int]] -> [[Int]]
-  zeros xss = [[0 | x <-xs] | xs <- xss]
-  
-  foreign export ccall zeros_hs :: [[CInt]] -> [[CInt]]
+
+import Foreign.Ptr
+import Foreign.C.Types
+import Foreign.Marshal.Array
+import System.IO
+import Foreign
+import System.IO.Unsafe
+--import Foreign.C.Types
+
+-- Eigentlich Bildverarbeitung
+test2 :: [Int] -> [Int]
+test2 = map (\a -> 3)
+
+-- Umschreiben für C
+testH2 :: Int -> Ptr CInt ->  IO (Ptr CInt)
+testH2 m img = newArray $ (map fromIntegral) $ unsafePerformIO $ fmap (test2 . (map fromIntegral)) $ peekArray m img
+
+-- Exportiert den ganzen Spaß
+foreign export ccall testH2 :: Int -> Ptr CInt -> IO (Ptr CInt) 
+
+
 

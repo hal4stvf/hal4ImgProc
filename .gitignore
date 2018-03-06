@@ -1,4 +1,6 @@
 # Random stuff
+*.hi
+*/*.hi
 
 # Latex Files
 *.out
@@ -28,3 +30,4 @@ A_jpgin
 A_jpgout
 BBRM.hs
 rm*
+X_FFI_Haskell/hal4ImgProcs

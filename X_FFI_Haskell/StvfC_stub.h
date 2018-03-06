@@ -2,7 +2,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern HsInt32 fibonacci_hs(HsInt32 a1);
+extern HsPtr testH2(HsInt a1, HsPtr a2);
 #ifdef __cplusplus
 }
 #endif
