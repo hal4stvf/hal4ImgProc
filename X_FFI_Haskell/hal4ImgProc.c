@@ -1,33 +1,34 @@
-#include "../hal4ImgProc.h"
+#include "hal4ImgProcHs.h"
+//#include "../hal4ImgProc.h"
 #include <HsFFI.h>
-extern void __stginit_StvfC(void);
+//extern void __stginit_StvfC(void);
 #include "StvfC_stub.h"
 #include <stdio.h> 
 
 
 int main(int argc, char* argv[]) {
- //int i = 1;
-	int B[3]; 
- int* A = malloc(sizeof(int)*8);
- for (int i = 0; i < 8; i++){
- 	A[i] = i+10;
-}
-   for (int i = 0; i < 8; i++){
-	 printf("Hallo: %d\n", A[i]);	 
-	 }
+	unsigned char **img_Matrix; 
+	FILE *pOut;
 
  /******************************************************************************/
  // Here is the call for Haskell //
  hs_init(&argc, &argv);
-	 //hs_add_root(__stginit_StvfC);
-	// i = testH(2);
-   A = testH2(8, A);
-   for (int i = 0; i < 8; i++){
-	 printf("Hallo: %d\n", A[i]);	 
-	 }
-	 //printf("Hallo: %d\n", i);	 
+ 
+	 // Not used CODE // hs_add_root(__stginit_StvfC); // Wofür??
+
+ // Here the img will be decoded
+ // and haskell programm (1) is called.
+ improcessGray(argv[1],&img_Matrix,1);
+
+ // Writes the worked on image to test.jpg
+ write_JPEG_file ("test.jpg", 50, &img_Matrix);
+
+ free_img(&img_Matrix);
+ fclose(pOut);
+
  hs_exit();
  /******************************************************************************/
 
  return 0;	
 }
+

@@ -31,3 +31,6 @@ A_jpgout
 BBRM.hs
 rm*
 X_FFI_Haskell/hal4ImgProcs
+X_FFI_Haskell/lena_testbild.jpg
+X_FFI_Haskell/test.jpg
+X_FFI_Haskell/testthis.jpg

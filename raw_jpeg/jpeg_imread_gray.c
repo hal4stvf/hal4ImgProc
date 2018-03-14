@@ -6,7 +6,7 @@
 #include <string.h>
 
 #include "jpeglib.h"
-#include "hal4ImgProc.h"
+#include "../hal4ImgProc.h"
 
 #include <setjmp.h> // nicht nötig, oder?
 
